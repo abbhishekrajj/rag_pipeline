@@ -10,7 +10,7 @@ class AdvancedRAGPipeline:
         self.llm = llm
         self.history = []
 
-    def query(self, question, top_k=5,min_score: float = 0.2):
+    def query(self, question, top_k=5,min_score: float = 0.2,stream: bool = False,summarize=True):
 
         # Retrieve docs
         results = self.retriever.retrieve(question, top_k=top_k)
@@ -40,7 +40,10 @@ class AdvancedRAGPipeline:
         answer = self.llm.generate_response(
             query=question,
             context=context
+            #stream=stream
         )
+
+        summary = answer[:200] if summarize else None
         # Add citations to answer
         citations_list = [f"[{i+1}] {src['source']} (page {src['page']})" for i, src in enumerate(sources)]
         citations_str = "\n".join(citations_list)

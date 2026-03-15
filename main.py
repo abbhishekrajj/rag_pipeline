@@ -22,7 +22,7 @@ if __name__ == "__main__":
     rag_pipeline = AdvancedRAGPipeline(retriever, llm)
 
     # 6️⃣ Ask question
-    question = "VitaminD"
+    question = "why Vitamin D is important"
 
     result = rag_pipeline.query(
         question,

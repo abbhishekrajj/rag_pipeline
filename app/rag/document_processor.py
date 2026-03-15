@@ -159,7 +159,7 @@ class DocumentProcess:
         self.process_website("https://redcliffelabs.com")
 
         return self.all_documents
-
+'''
 if __name__ == "__main__":
 
     # 1 load docs
@@ -171,4 +171,4 @@ if __name__ == "__main__":
     for doc in documents[:3]:
         print("------")
         print(doc.page_content[:300])
-
+'''

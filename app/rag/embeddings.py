@@ -31,7 +31,7 @@ class EmbeddingManager:
         print(f"[INFO] Embeddings shape: {embeddings.shape}")
         return embeddings
     
-    '''def generate_embeddings(self, texts: List[str]) -> np.ndarray:
+    def generate_embeddings(self, texts: List[str]) -> np.ndarray:
         if not self.model:
             raise ValueError("Model not loaded")
         
@@ -48,8 +48,8 @@ class EmbeddingManager:
         # generate embeddings
         embeddings = self.embed_chunks(chunks)
 
-        return chunks, embedding'''
-    
+        return chunks, embedding
+'''  
 # Example usage
 if __name__ == "__main__":
     load_all_documents = DocumentProcess()
@@ -59,3 +59,4 @@ if __name__ == "__main__":
     embeddings = emb_pipe.embed_chunks(chunks)
     print("[INFO] Example embedding:", embeddings[0] if len(embeddings) > 0 else None)
 
+'''

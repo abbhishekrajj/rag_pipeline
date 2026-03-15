@@ -132,7 +132,7 @@ class GroqLLM:
         
     def invoke(self, messages):
         return self.llm.invoke(messages)
-    
+'''   
     if __name__ == "__main__":
         vector_store = FaissVectorStore()
         vector_store.load()  
@@ -145,3 +145,4 @@ class GroqLLM:
         summary = RAGRetriever.retrieve(rag_search,query,top_k=3)
         print("Summary:", summary)
 
+'''

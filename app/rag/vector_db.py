@@ -65,7 +65,7 @@ class FaissVectorStore:
         print(f"[INFO] Querying vector store for: '{query_text}'")
         query_emb = self.model.encode([query_text]).astype('float32')
         return self.search(query_emb, top_k=top_k)
-
+'''
 # Example usage
 if __name__ == "__main__":
     from src.document_processor import DocumentProcess
@@ -75,3 +75,4 @@ if __name__ == "__main__":
     store.build_from_documents(docs)
     store.load()
     print(store.query("What is attention mechanism?", top_k=3))
+'''
