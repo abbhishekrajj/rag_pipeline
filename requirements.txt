@@ -1,0 +1,16 @@
+langchain
+sentence-transformers
+faiss-cpu
+pypdf
+tiktoken
+python-dotenv
+openai
+langchain_community
+langchain_core
+langchain_text_splitters
+uuid
+bs4
+langchain_groq
+pymupdf
+
+-e .
