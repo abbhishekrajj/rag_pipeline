@@ -1,3 +1,19 @@
+# Virtual Environment
+rag_env/
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+# Logs
+logs/
+# Vector database
+vector_store/
+# Data 
+data/
+# OS files
+.DS_Store
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -139,11 +155,15 @@ celerybeat.pid
 .env
 .envrc
 .venv
+rag_env/
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+
+#db
+vector_store/
 
 # Spyder project settings
 .spyderproject
