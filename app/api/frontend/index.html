@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>RAG Chatbot</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f4f6f8;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+#chatbox{
+background:white;
+width:500px;
+padding:20px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+#messages{
+margin-top:20px;
+height:200px;
+overflow-y:auto;
+border:1px solid #ddd;
+padding:10px;
+}
+
+button{
+margin-top:10px;
+padding:8px 12px;
+cursor:pointer;
+}
+
+</style>   <!-- STYLE YAHAN END HOGA -->
+
+</head>
+
+<body>
+
+<div id="chatbox">
+
+<h2>Chatbot</h2>
+
+<input id="question" placeholder="Ask something">
+<button onclick="send()">Send</button>
+<button onclick="clearChat()">Clear</button>
+
+<div id="messages"></div>
+
+</div>
+
+<script>
+
+async function send(){
+
+let question = document.getElementById("question").value;
+
+const res = await fetch("http://127.0.0.1:8000/ask",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+question:question
+})
+});
+
+const data = await res.json();
+
+document.getElementById("messages").innerHTML +=
+"<p><b>You:</b> " + question + "</p>";
+
+document.getElementById("messages").innerHTML +=
+"<p><b>Bot:</b> " + data.answer.answer + "</p>";
+
+}
+
+function clearChat(){
+document.getElementById("messages").innerHTML = "";
+}
+
+</script>
+
+</body>
+</html>

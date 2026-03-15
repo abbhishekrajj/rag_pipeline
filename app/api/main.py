@@ -4,6 +4,7 @@ from app.rag.vector_db import FaissVectorStore
 from app.rag.embeddings import EmbeddingManager
 from app.rag.retriever import RAGRetriever, GroqLLM
 from app.rag.pipeline import AdvancedRAGPipeline
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
@@ -29,7 +30,16 @@ class QueryRequest(BaseModel):
 
 @app.get("/")
 def home():
-    return {"message": "RAG API is running"}
+    return {"message": "This is Response from API"}
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.post("/ask")
 def ask_question(request: QueryRequest):
