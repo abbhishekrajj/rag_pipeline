@@ -13,9 +13,8 @@ from langchain_core.documents import Document
 from pathlib import Path
 
 
-
 class DocumentProcess:
-    def __init__(self, data_dir="Data"):
+    def __init__(self, data_dir="data"):
         self.data_dir = Path(data_dir)
         self.all_documents = []
 
@@ -37,7 +36,7 @@ class DocumentProcess:
                 # 'hi_res' strategy tables aur headings ko behtar pehchanti hai
                 # 'mode="elements"' har paragraph/table ko alag document banata hai
                 loader = PyMuPDFLoader(str(pdf_file))
-                documents = loader.load()
+                
                 documnets =loader.load()
                 #add source info to meta data
                 for doc in documnets:
@@ -50,7 +49,7 @@ class DocumentProcess:
                 print(f"  ✓ Loaded {len(documnets)} pages")
 
             except Exception as e:
-                print(f" Error: {e}")
+                print(f"Error processing {pdf_file}: {e}")
         print(f"\nTotal documents loaded: {len(self.all_documents)}")
         return self.all_documents
 
@@ -155,10 +154,11 @@ class DocumentProcess:
     def load_all_data(self):
 
         self.process_all_pdfs()
-        self.process_all_csv()
-        self.process_website("https://redcliffelabs.com")
+        #self.process_all_csv()
+        #self.process_website("https://redcliffelabs.com")
 
         return self.all_documents
+    
 '''
 if __name__ == "__main__":
 
@@ -172,3 +172,4 @@ if __name__ == "__main__":
         print("------")
         print(doc.page_content[:300])
 '''
+

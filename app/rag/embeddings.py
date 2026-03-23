@@ -1,9 +1,8 @@
-import sys
-from typing import List, Dict, Any, Tuple
+from typing import List, Any,Tuple
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sentence_transformers import SentenceTransformer
+from langchain_core.documents import Document
 import numpy as np
-from app.rag.document_processor import DocumentProcess
 
 
 class EmbeddingManager:
@@ -24,6 +23,22 @@ class EmbeddingManager:
         print(f"[INFO] Split {len(documents)} documents into {len(chunks)} chunks.")
         return chunks
 
+    '''def embed_chunks(self, chunks: List[Any]) -> np.ndarray:
+        texts = [chunk.page_content for chunk in chunks]
+        print(f"[INFO] Generating embeddings for {len(texts)} chunks...")
+        embeddings = self.model.encode(texts, show_progress_bar=True)
+        print(f"[INFO] Embeddings shape: {embeddings.shape}")
+        return embeddings'''
+    
+    def generate_embeddings(self, texts: List[str]) -> np.ndarray:
+        if not self.model:
+            raise ValueError("Model not loaded")
+        
+        print(f"Generating embeddings for {len(texts)} texts...")
+        embeddings = self.model.encode(texts,batch_size=32, show_progress_bar=True)
+        print(f"Generated embeddings with shape: {embeddings.shape}")
+        return embeddings
+
     def embed_chunks(self, chunks: List[Any]) -> np.ndarray:
         texts = [chunk.page_content for chunk in chunks]
         print(f"[INFO] Generating embeddings for {len(texts)} chunks...")
@@ -31,16 +46,25 @@ class EmbeddingManager:
         print(f"[INFO] Embeddings shape: {embeddings.shape}")
         return embeddings
     
-    def generate_embeddings(self, texts: List[str]) -> np.ndarray:
-        if not self.model:
-            raise ValueError("Model not loaded")
-        
-        print(f"Generating embeddings for {len(texts)} texts...")
-        embeddings = self.model.encode(texts, show_progress_bar=True)
-        print(f"Generated embeddings with shape: {embeddings.shape}")
-        return embeddings
+    def _ensure_documents(self, documents):
+        # Agar already Document hai → return as it is
+        if len(documents) > 0 and hasattr(documents[0], "page_content"):
+            return documents
+
+        # Agar dict hai → convert karo
+        converted = []
+        for d in documents:
+            converted.append(
+                Document(
+                    page_content=d.get("content", ""),
+                    metadata=d.get("metadata", {})
+                )
+            )
+        return converted
     
-    def process_documents(self, documents):
+    def process_documents(self, documents: List[Any]) -> Tuple[List[Any], np.ndarray]:
+
+        documents = self._ensure_documents(documents)
 
         # chunk documents
         chunks = self.chunk_documents(documents)
@@ -48,15 +72,21 @@ class EmbeddingManager:
         # generate embeddings
         embeddings = self.embed_chunks(chunks)
 
-        return chunks, embedding
-'''  
+        return chunks, embeddings
+    
+
+'''
 # Example usage
 if __name__ == "__main__":
-    load_all_documents = DocumentProcess()
-    documents = load_all_documents.loader.load_all_data()
-    emb_pipe = EmbeddingManager()
-    chunks = emb_pipe.chunk_documents(documents)
-    embeddings = emb_pipe.embed_chunks(chunks)
-    print("[INFO] Example embedding:", embeddings[0] if len(embeddings) > 0 else None)
+    from document_processor import DocumentProcess
+
+    loader = DocumentProcess(data_dir="data")
+    docs = loader.load_all_data()
+
+    emb = EmbeddingManager()
+    chunks, embeddings = emb.process_documents(docs)
+
+    print("Chunks:", len(chunks))
+    print("Embedding shape:", embeddings.shape)
 
 '''

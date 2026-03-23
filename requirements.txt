@@ -132,3 +132,4 @@ bs4
 langchain_groq
 uvicorn
 fastapi
+rank_bm25
