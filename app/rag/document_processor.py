@@ -11,6 +11,9 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 from langchain_core.documents import Document
 from pathlib import Path
+from app.utils.logger import logger
+
+
 
 
 class DocumentProcess:
@@ -28,7 +31,8 @@ class DocumentProcess:
         pdf_files = list(self.data_dir.glob("**/*.pdf"))
         print("PDF FILES FOUND:", pdf_files)
             
-        print(f"found {len(pdf_files)} Pdf file to process")
+        #print(f"found {len(pdf_files)} Pdf file to process")
+        logger.info(f"Found {len(pdf_files)} PDF files")
 
         for pdf_file in pdf_files:
             print(f"\nProcessing: {pdf_file.name}")
@@ -49,7 +53,7 @@ class DocumentProcess:
                 print(f"  ✓ Loaded {len(documnets)} pages")
 
             except Exception as e:
-                print(f"Error processing {pdf_file}: {e}")
+                logger.error(f"Error processing {pdf_file}", exc_info=True)
         print(f"\nTotal documents loaded: {len(self.all_documents)}")
         return self.all_documents
 
@@ -159,17 +163,18 @@ class DocumentProcess:
 
         return self.all_documents
     
-'''
+
 if __name__ == "__main__":
 
     # 1 load docs
     loader = DocumentProcess()
     documents = loader.load_all_data()
 
-    print("Total documents:", len(documents))
+    #print("Total documents:", len(documents))
+    logger.info(f"Total documents:" , len(documents))
 
     for doc in documents[:3]:
         print("------")
         print(doc.page_content[:300])
-'''
+
 

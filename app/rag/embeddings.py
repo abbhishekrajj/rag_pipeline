@@ -11,6 +11,7 @@ class EmbeddingManager:
         self.chunk_overlap = chunk_overlap
         self.model = SentenceTransformer(model_name)
         print(f"[INFO] Loaded embedding model: {model_name}")
+        
 
     def chunk_documents(self, documents: List[Any]) -> List[Any]:
         splitter = RecursiveCharacterTextSplitter(
@@ -35,6 +36,8 @@ class EmbeddingManager:
             raise ValueError("Model not loaded")
         
         print(f"Generating embeddings for {len(texts)} texts...")
+        
+        #logger.info(f"Generating embeddings for {len(texts)} texts")
         embeddings = self.model.encode(texts,batch_size=32, show_progress_bar=True)
         print(f"Generated embeddings with shape: {embeddings.shape}")
         return embeddings

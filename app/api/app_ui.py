@@ -1,13 +1,24 @@
 import streamlit as st
 import requests
 
+#langsmith setup
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_PROJECT"] = "RAG_APP"
+
+
+
 API_URL = "http://127.0.0.1:8000/ask"
 
 st.set_page_config(page_title="RAG Assistant 🤖")
 
 st.title("🤖 RAG Document Assistant")
 
-question = st.text_input("Ask your question:")
+question = st.text_input("How Can I help you?:")
 
 if st.button("Ask"):
 

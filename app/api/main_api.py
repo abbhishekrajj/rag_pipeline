@@ -6,6 +6,15 @@ from app.rag.embeddings import EmbeddingManager
 from app.rag.retriever import RAGRetriever
 from app.rag.pipeline import AdvancedRAGPipeline, Reranker, LLMModel, PromptBuilder
 
+#Lnagsmith setup
+from dotenv import load_dotenv
+import os
+
+load_dotenv() 
+
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_PROJECT"] = "RAG_APP"
+
 app = FastAPI()
 
  # 1️⃣ Load vector store
