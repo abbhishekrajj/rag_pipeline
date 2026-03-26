@@ -56,12 +56,9 @@ class PromptBuilder:
 
     def build(self, query: str, context: str):
         return f"""
-        You are a helpful AI assistant.
-
-        Answer ONLY using the provided context.
-        If the answer is not in context, say "I don't know".
-
-        Be concise and accurate.
+        You are a compliance assistant.
+        Answer ONLY from context.
+        If not found → say "Not available".
 
         Context:
         {context}

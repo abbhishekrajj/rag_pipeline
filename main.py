@@ -1,38 +1,36 @@
-
 from app.rag.embeddings import EmbeddingManager
 from app.rag.vector_db import FaissVectorStore
 from app.rag.retriever import RAGRetriever
 from app.rag.pipeline import AdvancedRAGPipeline, Reranker, LLMModel, PromptBuilder
 
+# 🔥 RAGAS
+from app.evaluation.ragas_eval import RAGASEvaluator
+
 
 def main():
     print("🚀 Starting RAG System...")
 
+    # -----------------------------
     # 1️⃣ Load vector store
+    # -----------------------------
     vector_store = FaissVectorStore()
 
     try:
         vector_store.load()
         print("✅ Vector store loaded")
     except:
-        print("⚠️ No vector DB found. Building new one...")
+        print("⚠️ No vector DB found. Please build it first.")
+        return
 
-    # 2️⃣ Initialize embedding manager
+    # -----------------------------
+    # 2️⃣ Initialize components
+    # -----------------------------
     embedding_manager = EmbeddingManager()
-
-    # 3️⃣ Create retriever
     retriever = RAGRetriever(vector_store, embedding_manager)
-
-    # 4️⃣ Initialize reranker
     reranker = Reranker()
-
-    # 5️⃣ Initialize LLM
     llm = LLMModel()
-
-    # 6️⃣ Prompt builder
     prompt_builder = PromptBuilder()
 
-    # 7️⃣ Create RAG pipeline
     rag_pipeline = AdvancedRAGPipeline(
         retriever=retriever,
         reranker=reranker,
@@ -40,19 +38,14 @@ def main():
         prompt_builder=prompt_builder
     )
 
-    print("✅ System Ready! Type 'exit' to quit.\n")
+    evaluator = RAGASEvaluator()
 
-    # 🔥 Interactive CLI loop
-    '''while True:
-        question = input("\n💬 Ask a question: ")
+    print("✅ System Ready!\n")
 
-        if question.lower() in ["exit", "quit"]:
-            print("👋 Exiting...")
-            break
-        '''
-
+    # -----------------------------
+    # 🔥 Test Question
+    # -----------------------------
     question = "What is Due Diligence?"
-
 
     result = rag_pipeline.query(
         question,
@@ -60,8 +53,11 @@ def main():
         summarize=True
     )
 
+    # -----------------------------
+    # Output
+    # -----------------------------
     print("\n===== ANSWER =====")
-    print(result["answer"])
+    print(result.get("answer"))
 
     print("\n===== SUMMARY =====")
     print(result.get("summary"))
@@ -69,6 +65,36 @@ def main():
     print("\n===== SOURCES =====")
     for src in result.get("sources", []):
         print(src)
+
+    # -----------------------------
+    # 🔥 DEBUG (IMPORTANT)
+    # -----------------------------
+    contexts = [
+        src.get("content", "")
+        for src in result.get("sources", [])
+        if src.get("content")
+    ]
+
+    print("\n===== DEBUG =====")
+    print("CONTEXT COUNT:", len(contexts))
+    print("FIRST CONTEXT:", contexts[:1])
+
+    # -----------------------------
+    # 🔥 RAGAS EVALUATION
+    # -----------------------------
+    if contexts:
+        clean_answer = result.get("answer", "").split("Citations")[0]
+
+        eval_result = evaluator.evaluate_response(
+            question=result.get("question"),
+            answer=clean_answer,
+            contexts=contexts
+        )
+
+        print("\n===== EVALUATION =====")
+        print(eval_result)
+    else:
+        print("\n⚠️ No context found → RAGAS cannot run")
 
 
 if __name__ == "__main__":
